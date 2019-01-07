@@ -1,6 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const app = express();
+const getWeatherImage = require("./getWeatherImage");
 
 //Listening on port 5000
 const port = 5000;
@@ -14,21 +15,6 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello !!");
 });
-
-function getWeatherImage(weatherId) {
-  const p = new Promise((resolve, reject) => {
-    axios.get("https://api.myjson.com/bins/md2iw").then(response => {
-      let elementUrl;
-      response.data.map(element => {
-        if (element.id == weatherId) {
-          elementUrl = element.url;
-        }
-      });
-      resolve(elementUrl);
-    });
-  });
-  return p;
-}
 
 /*Recast send us a POST request to /weather to get the weather when a user has filled
 his search criterias*/

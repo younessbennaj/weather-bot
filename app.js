@@ -21,9 +21,10 @@ app.get("/", (req, res) => {
 his search criterias*/
 app.post("/weather", (req, res) => {
   const { location } = req.body.conversation.memory;
+  const { datetime } = req.body.nlp.entities;
   if (req.body.nlp.entities.datetime) {
-    if (req.body.nlp.entities.datetime[0].accuracy == "day") {
-      const datetime = req.body.nlp.entities.datetime[0].iso;
+    if (datetime[0].accuracy == "day") {
+      const date = datetime[0].iso;
 
       //Access to 5 day forecast for any location or city
       axios
@@ -37,7 +38,7 @@ app.post("/weather", (req, res) => {
         .then(response => {
           //Access weather for a specific day
           const weatherOneDay = response.data.list.filter((element, index) => {
-            let actuelDay = new Date(datetime).getDate();
+            let actuelDay = new Date(date).getDate();
             let dateElement = new Date(element.dt_txt).getDate();
             if (dateElement == actuelDay) {
               return element;
@@ -51,8 +52,6 @@ app.post("/weather", (req, res) => {
               return element;
             }
           });
-
-          console.log(weatherOneHour[0].weather);
 
           getWeatherImage(weatherOneHour[0].weather[0].id).then(result => {
             const weatherUrl = result;
@@ -93,15 +92,64 @@ app.post("/weather", (req, res) => {
         });
     }
 
-    if (req.body.nlp.entities.datetime[0].accuracy == "day,halfday") {
-      res.json({
-        replies: [
-          {
-            type: "text",
-            content: "HALFDAY weather"
+    if (datetime[0].accuracy == "day,halfday") {
+      axios
+        .get(API_FORECAST_URL, {
+          params: {
+            lat: location.lat,
+            lon: location.lng,
+            appid: API_KEY
           }
-        ]
-      });
+        })
+        .then(response => {
+          //Access weather for a specific day
+          const date = datetime[0].iso;
+          let hours;
+
+          if (new Date(datetime[0].iso).getHours() == 8) {
+            hours = 10;
+          } else {
+            hours = new Date(datetime[0].iso).getHours();
+          }
+
+          const weatherOneDay = response.data.list.filter((element, index) => {
+            let actuelDay = new Date(date).getDate();
+            let dateElement = new Date(element.dt_txt).getDate();
+            if (dateElement == actuelDay) {
+              return element;
+            }
+          });
+
+          const weatherOneHour = weatherOneDay.filter((element, index) => {
+            let actualHour = hours - 1;
+            let hourElement = new Date(element.dt_txt).getHours();
+            if (actualHour == hourElement) {
+              return element;
+            }
+          });
+
+          getWeatherImage(weatherOneHour[0].weather[0].id).then(result => {
+            const weatherUrl = result;
+            res.json({
+              replies: [
+                {
+                  type: "card",
+                  content: {
+                    title: weatherOneHour[0].weather[0].main,
+                    subtitle: location.formatted,
+                    imageUrl: weatherUrl,
+                    buttons: [
+                      {
+                        title: "Merci",
+                        value: "Merci"
+                      }
+                    ]
+                  }
+                }
+              ]
+            });
+          });
+        });
     }
   } else {
     axios

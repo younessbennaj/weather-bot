@@ -21,11 +21,15 @@ app.get("/", (req, res) => {
 /*Recast send us a POST request to /weather to get the weather when a user has filled
 his search criterias*/
 app.post("/weather", (req, res) => {
+  //Get datetime and locaiton informations about the user request
   const { location } = req.body.conversation.memory;
   const { datetime } = req.body.nlp.entities;
+  //If the user want the weather for a specific hour (not the actual moment)
   if (datetime) {
     if (datetime[0].accuracy == "day") {
+      //The date in iso format
       const date = datetime[0].iso;
+
       //Access to 5 day forecast for any location or city
       axios
         .get(API_FORECAST_URL, {
@@ -36,15 +40,18 @@ app.post("/weather", (req, res) => {
           }
         })
         .then(response => {
+          //Get weather for a specific hour in a day
           const weatherOneHour = getWeatherOneHour(
             date,
             response.data.list,
             12
           );
 
+          //Get the image to illustrate the weather
           getWeatherImage(weatherOneHour.weather[0].id).then(result => {
             const weatherUrl = result;
 
+            //Send card with weather informations and button for a specific hour
             res.json({
               replies: [
                 {
@@ -81,6 +88,7 @@ app.post("/weather", (req, res) => {
         });
     }
 
+    //If the user want the weather for a specific moment in a day
     if (
       datetime[0].accuracy == "day,halfday" ||
       datetime[0].accuracy == "halfday"
@@ -97,13 +105,14 @@ app.post("/weather", (req, res) => {
           //Access weather for a specific day
           const date = datetime[0].iso;
           let hours;
-
+          //To find the corresponding weather in the API return
           if (new Date(datetime[0].iso).getHours() == 8) {
             hours = 9;
           } else {
             hours = new Date(datetime[0].iso).getHours() - 1;
           }
 
+          //Get weather for a specific hour in a day
           const weatherOneHour = getWeatherOneHour(
             date,
             response.data.list,
@@ -113,6 +122,7 @@ app.post("/weather", (req, res) => {
           if (!!weatherOneHour) {
             getWeatherImage(weatherOneHour.weather[0].id).then(result => {
               const weatherUrl = result;
+              //Send a message with the weather for a specific hour in a day
               res.json({
                 replies: [
                   {
@@ -142,6 +152,7 @@ app.post("/weather", (req, res) => {
         });
     }
   } else {
+    //The user want the weather for the actual moment
     axios
       .get(API_URL, {
         params: {
@@ -154,6 +165,7 @@ app.post("/weather", (req, res) => {
         const { id, main } = response.data.weather[0];
         getWeatherImage(id).then(result => {
           const weatherUrl = result;
+          //Send a card with the weather informations
           res.json({
             replies: [
               {

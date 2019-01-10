@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const app = express();
 const getWeatherImage = require("./getWeatherImage");
+const getWeatherOneHour = require("./getWeatherOneHour");
 
 //Listening on port 5000
 const port = 5000;
@@ -35,24 +36,13 @@ app.post("/weather", (req, res) => {
           }
         })
         .then(response => {
-          //Access weather for a specific day
-          const weatherOneDay = response.data.list.filter((element, index) => {
-            let actuelDay = new Date(date).getDate();
-            let dateElement = new Date(element.dt_txt).getDate();
-            if (dateElement == actuelDay) {
-              return element;
-            }
-          });
+          const weatherOneHour = getWeatherOneHour(
+            date,
+            response.data.list,
+            12
+          );
 
-          const weatherOneHour = weatherOneDay.filter((element, index) => {
-            let actualHour = 12;
-            let hourElement = new Date(element.dt_txt).getHours();
-            if (actualHour == hourElement) {
-              return element;
-            }
-          });
-
-          getWeatherImage(weatherOneHour[0].weather[0].id).then(result => {
+          getWeatherImage(weatherOneHour.weather[0].id).then(result => {
             const weatherUrl = result;
 
             res.json({
@@ -60,7 +50,7 @@ app.post("/weather", (req, res) => {
                 {
                   type: "card",
                   content: {
-                    title: weatherOneHour[0].weather[0].main,
+                    title: weatherOneHour.weather[0].main,
                     subtitle: location.formatted,
                     imageUrl: weatherUrl,
                     buttons: [
@@ -109,36 +99,26 @@ app.post("/weather", (req, res) => {
           let hours;
 
           if (new Date(datetime[0].iso).getHours() == 8) {
-            hours = 10;
+            hours = 9;
           } else {
-            hours = new Date(datetime[0].iso).getHours();
+            hours = new Date(datetime[0].iso).getHours() - 1;
           }
 
-          const weatherOneDay = response.data.list.filter((element, index) => {
-            let actuelDay = new Date(date).getDate();
-            let dateElement = new Date(element.dt_txt).getDate();
-            if (dateElement == actuelDay) {
-              return element;
-            }
-          });
+          const weatherOneHour = getWeatherOneHour(
+            date,
+            response.data.list,
+            hours
+          );
 
-          const weatherOneHour = weatherOneDay.filter((element, index) => {
-            let actualHour = hours - 1;
-            let hourElement = new Date(element.dt_txt).getHours();
-            if (actualHour == hourElement) {
-              return element;
-            }
-          });
-
-          if (!!weatherOneHour[0]) {
-            getWeatherImage(weatherOneHour[0].weather[0].id).then(result => {
+          if (!!weatherOneHour) {
+            getWeatherImage(weatherOneHour.weather[0].id).then(result => {
               const weatherUrl = result;
               res.json({
                 replies: [
                   {
                     type: "card",
                     content: {
-                      title: weatherOneHour[0].weather[0].main,
+                      title: weatherOneHour.weather[0].main,
                       subtitle: location.formatted,
                       imageUrl: weatherUrl,
                       buttons: [

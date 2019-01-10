@@ -22,10 +22,9 @@ his search criterias*/
 app.post("/weather", (req, res) => {
   const { location } = req.body.conversation.memory;
   const { datetime } = req.body.nlp.entities;
-  if (req.body.nlp.entities.datetime) {
+  if (datetime) {
     if (datetime[0].accuracy == "day") {
       const date = datetime[0].iso;
-
       //Access to 5 day forecast for any location or city
       axios
         .get(API_FORECAST_URL, {
@@ -92,7 +91,10 @@ app.post("/weather", (req, res) => {
         });
     }
 
-    if (datetime[0].accuracy == "day,halfday") {
+    if (
+      datetime[0].accuracy == "day,halfday" ||
+      datetime[0].accuracy == "halfday"
+    ) {
       axios
         .get(API_FORECAST_URL, {
           params: {
@@ -128,27 +130,35 @@ app.post("/weather", (req, res) => {
             }
           });
 
-          getWeatherImage(weatherOneHour[0].weather[0].id).then(result => {
-            const weatherUrl = result;
+          if (!!weatherOneHour[0]) {
+            getWeatherImage(weatherOneHour[0].weather[0].id).then(result => {
+              const weatherUrl = result;
+              res.json({
+                replies: [
+                  {
+                    type: "card",
+                    content: {
+                      title: weatherOneHour[0].weather[0].main,
+                      subtitle: location.formatted,
+                      imageUrl: weatherUrl,
+                      buttons: [
+                        {
+                          title: "Merci",
+                          value: "Merci"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              });
+            });
+          } else {
             res.json({
               replies: [
-                {
-                  type: "card",
-                  content: {
-                    title: weatherOneHour[0].weather[0].main,
-                    subtitle: location.formatted,
-                    imageUrl: weatherUrl,
-                    buttons: [
-                      {
-                        title: "Merci",
-                        value: "Merci"
-                      }
-                    ]
-                  }
-                }
+                { type: "text", content: "Je n'ai pas la réponse désolé :(" }
               ]
             });
-          });
+          }
         });
     }
   } else {

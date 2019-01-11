@@ -108,16 +108,13 @@ app.post("/weather", (req, res) => {
         .then(response => {
           //Access weather for a specific day
           const date = datetime[0].iso;
-          console.log(date);
           let hours;
           //To find the corresponding weather in the API return
           if (new Date(datetime[0].iso).getHours() == 8) {
             hours = 9;
           } else {
-            hours = new Date(datetime[0].iso).getHours() - 1;
+            hours = new Date(datetime[0].iso).getHours();
           }
-
-          console.log(hours);
 
           //Get weather for a specific hour in a day
           const weatherOneHour = getWeatherOneHour(

@@ -25,7 +25,7 @@ app.post("/weather", (req, res) => {
   const { location } = req.body.conversation.memory;
   const { datetime } = req.body.nlp.entities;
   console.log(location);
-  console.log(____________);
+  console.log("____________");
   console.log(datetime);
   //If the user want the weather for a specific hour (not the actual moment)
   if (datetime) {

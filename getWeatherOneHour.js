@@ -7,8 +7,6 @@ const getWeatherOneHour = (date, weatherList, specificHour) => {
     }
   });
 
-  console.log(specificHour);
-
   const weatherOneHour = weatherOneDay.filter((element, index) => {
     let actualHour = specificHour || new Date(date).getHours();
     let hourElement = new Date(element.dt_txt).getHours();

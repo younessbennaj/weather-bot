@@ -24,9 +24,6 @@ app.post("/weather", (req, res) => {
   //Get datetime and locaiton informations about the user request
   const { location } = req.body.conversation.memory;
   const { datetime } = req.body.nlp.entities;
-  console.log(location);
-  console.log("____________");
-  console.log(datetime);
   //If the user want the weather for a specific hour (not the actual moment)
   if (datetime) {
     if (datetime[0].accuracy == "day") {
@@ -49,8 +46,6 @@ app.post("/weather", (req, res) => {
             response.data.list,
             12
           );
-          console.log("accuracy: Day");
-          console.log(weatherOneHour);
 
           //Get the image to illustrate the weather
           getWeatherImage(weatherOneHour.weather[0].id).then(result => {
@@ -113,6 +108,7 @@ app.post("/weather", (req, res) => {
         .then(response => {
           //Access weather for a specific day
           const date = datetime[0].iso;
+          console.log(date);
           let hours;
           //To find the corresponding weather in the API return
           if (new Date(datetime[0].iso).getHours() == 8) {
@@ -121,15 +117,14 @@ app.post("/weather", (req, res) => {
             hours = new Date(datetime[0].iso).getHours() - 1;
           }
 
+          console.log(hours);
+
           //Get weather for a specific hour in a day
           const weatherOneHour = getWeatherOneHour(
             date,
             response.data.list,
             hours
           );
-
-          console.log("accuracy: Day");
-          console.log(weatherOneHour);
 
           if (!!weatherOneHour) {
             getWeatherImage(weatherOneHour.weather[0].id).then(result => {

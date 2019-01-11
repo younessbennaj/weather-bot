@@ -21,6 +21,7 @@ app.get("/", (req, res) => {
 /*Recast send us a POST request to /weather to get the weather when a user has filled
 his search criterias*/
 app.post("/weather", (req, res) => {
+  console.log("test");
   //Get datetime and locaiton informations about the user request
   const { location } = req.body.conversation.memory;
   const { datetime } = req.body.nlp.entities;

@@ -55,10 +55,14 @@ app.post("/weather", (req, res) => {
             res.json({
               replies: [
                 {
+                  type: "text",
+                  content: "Hum alors selon mes recherches 🕵️"
+                },
+                {
                   type: "card",
                   content: {
                     title: weatherOneHour.weather[0].main,
-                    subtitle: location.formatted,
+                    subtitle: `Voilà le temps pour ${location.formatted}.`,
                     imageUrl: weatherUrl,
                     buttons: [
                       {
@@ -126,14 +130,18 @@ app.post("/weather", (req, res) => {
               res.json({
                 replies: [
                   {
+                    type: "text",
+                    content: "Voilà ce que j'ai pour ce moment de la journée 😬"
+                  },
+                  {
                     type: "card",
                     content: {
                       title: weatherOneHour.weather[0].main,
-                      subtitle: location.formatted,
+                      subtitle: `La météo pour ${location.formatted}.`,
                       imageUrl: weatherUrl,
                       buttons: [
                         {
-                          title: "Merci",
+                          title: "Merci 🙌",
                           value: "Merci"
                         }
                       ]
@@ -145,7 +153,15 @@ app.post("/weather", (req, res) => {
           } else {
             res.json({
               replies: [
-                { type: "text", content: "Je n'ai pas la réponse désolé :(" }
+                {
+                  type: "text",
+                  content: "Hum... pas de réponse ce coup ci."
+                },
+                {
+                  type: "text",
+                  content:
+                    "Bon ça reste entre nous hein ! J’ai une réputation à préserver 😎"
+                }
               ]
             });
           }
@@ -169,16 +185,30 @@ app.post("/weather", (req, res) => {
           res.json({
             replies: [
               {
+                type: "text",
+                content: "Voilà ce que j'en sais 😌"
+              },
+              {
                 type: "card",
                 content: {
                   title: main,
-                  subtitle: location.formatted,
+                  subtitle: `Météo pour ${location.formatted}.`,
                   imageUrl: weatherUrl,
                   buttons: [
                     {
-                      title: "En savoir plus !",
+                      title: "Merci 🙌",
                       type: "BUTTON_TYPE",
-                      value: "BUTTON_VALUE"
+                      value: "Merci"
+                    },
+                    {
+                      title: "Demain ? 🤔",
+                      type: "BUTTON_TYPE",
+                      value: `Quel temps demain pour ${location.raw} ?`
+                    },
+                    {
+                      title: "Stupid robot 😏",
+                      type: "BUTTON_TYPE",
+                      value: "Erreur"
                     }
                   ]
                 }

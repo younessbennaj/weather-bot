@@ -191,6 +191,31 @@ app.post("/weather", (req, res) => {
               {
                 type: "card",
                 content: {
+                  title: "Titre",
+                  subtitle: "Titre",
+                  imageUrl: "#",
+                  buttons: [
+                    {
+                      title: "Merci",
+                      type: "BUTTON_TYPE",
+                      value: "Merci"
+                    },
+                    {
+                      title: "Demain",
+                      type: "BUTTON_TYPE",
+                      value: "Demain"
+                    },
+                    {
+                      title: "Stupid robot",
+                      type: "BUTTON_TYPE",
+                      value: "Erreur"
+                    }
+                  ]
+                }
+              },
+              {
+                type: "card",
+                content: {
                   title: main,
                   subtitle: `Météo pour ${location.formatted}.`,
                   imageUrl: weatherUrl,

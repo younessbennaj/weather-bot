@@ -186,27 +186,27 @@ app.post("/weather", (req, res) => {
             replies: [
               {
                 type: "text",
-                content: "Voilà ce que j'en sais 😌"
+                content: "Voilà ce que j'en sais 😌 oh oh oh"
               },
               {
                 type: "card",
                 content: {
                   title: "Titre",
-                  subtitle: "Titre",
-                  imageUrl: "#",
+                  subtitle: "Sous-titre",
+                  imageUrl: "https://i.imgur.com/AqkJBm3.jpg",
                   buttons: [
                     {
-                      title: "Merci",
+                      title: "Merci 🙌",
                       type: "BUTTON_TYPE",
                       value: "Merci"
                     },
                     {
-                      title: "Demain",
+                      title: "Demain ? 🤔",
                       type: "BUTTON_TYPE",
-                      value: "Demain"
+                      value: "Hey"
                     },
                     {
-                      title: "Stupid robot",
+                      title: "Stupid robot 😏",
                       type: "BUTTON_TYPE",
                       value: "Erreur"
                     }

@@ -21,10 +21,12 @@ app.get("/", (req, res) => {
 /*Recast send us a POST request to /weather to get the weather when a user has filled
 his search criterias*/
 app.post("/weather", (req, res) => {
-  console.log("test");
   //Get datetime and locaiton informations about the user request
   const { location } = req.body.conversation.memory;
   const { datetime } = req.body.nlp.entities;
+  console.log(location);
+  console.log(____________);
+  console.log(datetime);
   //If the user want the weather for a specific hour (not the actual moment)
   if (datetime) {
     if (datetime[0].accuracy == "day") {
@@ -47,6 +49,8 @@ app.post("/weather", (req, res) => {
             response.data.list,
             12
           );
+          console.log("accuracy: Day");
+          console.log(weatherOneHour);
 
           //Get the image to illustrate the weather
           getWeatherImage(weatherOneHour.weather[0].id).then(result => {
@@ -123,6 +127,9 @@ app.post("/weather", (req, res) => {
             response.data.list,
             hours
           );
+
+          console.log("accuracy: Day");
+          console.log(weatherOneHour);
 
           if (!!weatherOneHour) {
             getWeatherImage(weatherOneHour.weather[0].id).then(result => {

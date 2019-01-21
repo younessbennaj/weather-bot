@@ -66,19 +66,22 @@ app.post("/weather", (req, res) => {
                     imageUrl: weatherUrl,
                     buttons: [
                       {
-                        title: "Matin",
+                        title: "Matin 🌅",
+                        type: "postback",
                         value: `Quel temps fait il à ${
                           location.raw
                         } demain matin ?`
                       },
                       {
-                        title: "Midi",
+                        title: "Midi ☀️",
+                        type: "postback",
                         value: `Quel temps fait il à ${
                           location.raw
                         } demain midi ?`
                       },
                       {
-                        title: "Soir",
+                        title: "Soir 🌙",
+                        type: "postback",
                         value: `Quel temps fait il à ${
                           location.raw
                         } demain soir ?`
@@ -142,6 +145,7 @@ app.post("/weather", (req, res) => {
                       buttons: [
                         {
                           title: "Merci 🙌",
+                          type: "postback",
                           value: "Merci"
                         }
                       ]
@@ -191,48 +195,23 @@ app.post("/weather", (req, res) => {
               {
                 type: "card",
                 content: {
-                  title: "Titre",
-                  subtitle: "Sous-titre",
-                  imageUrl: "https://i.imgur.com/AqkJBm3.jpg",
-                  buttons: [
-                    {
-                      title: "Merci 🙌",
-                      type: "BUTTON_TYPE",
-                      value: "Merci"
-                    },
-                    {
-                      title: "Demain ? 🤔",
-                      type: "BUTTON_TYPE",
-                      value: "Hey"
-                    },
-                    {
-                      title: "Stupid robot 😏",
-                      type: "BUTTON_TYPE",
-                      value: "Erreur"
-                    }
-                  ]
-                }
-              },
-              {
-                type: "card",
-                content: {
                   title: main,
                   subtitle: `Météo pour ${location.formatted}.`,
                   imageUrl: weatherUrl,
                   buttons: [
                     {
                       title: "Merci 🙌",
-                      type: "BUTTON_TYPE",
+                      type: "postback",
                       value: "Merci"
                     },
                     {
                       title: "Demain ? 🤔",
-                      type: "BUTTON_TYPE",
+                      type: "postback",
                       value: `Quel temps demain pour ${location.raw} ?`
                     },
                     {
                       title: "Stupid robot 😏",
-                      type: "BUTTON_TYPE",
+                      type: "postback",
                       value: "Erreur"
                     }
                   ]
